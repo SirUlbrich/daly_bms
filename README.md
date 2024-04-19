@@ -44,7 +44,8 @@ To use the components provided by this repository, simply add this to your `.yam
 
 ```yaml
 external_components:
-  - source: github.com/SirUlbrich/daly-bms
+  - source: github://SirUlbrich/daly_bms@components
+    components: [daly_bms]
 ```
 
 More information can be found [here](https://esphome.io/components/external_components.html).
@@ -92,7 +93,7 @@ change "template_sens" to your template sensor.
 ## Example .yaml file
 
 Complete example esp32 .yaml file with all sensors:
-```
+```yaml
 substitutions:
   node_name: esp32
   device_name3: Daly BMS
