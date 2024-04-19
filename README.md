@@ -1,17 +1,17 @@
-# My Custom Component daly_bms for ESPHome
+# Custom Component daly_bms for ESPHome
 
-This repository is a collection of my custom components for [ESPHome](https://esphome.io/)
+This repository is a collection of my custom components for [ESPHome](https://esphome.io/).
 Just tried on ESP32.
 
-Extended sensors (measurements):
+Add sensors (measurements):
 ```
-    bms1_fehlercode
+    bms1_fehlercode: (0x98 Byte 7)
     power:
     bms_watchdog:
     cycle:
     cell_voltage_difference:
 ```
-Extended binary_sensors:
+Add binary_sensors:
 ```
     cell_1_balance_active:
     ...
@@ -52,7 +52,7 @@ More information can be found [here](https://esphome.io/components/external_comp
 
 ## Components
 
-### [daly_bms](daly_bms)
+### [daly_bms](components/daly_bms)
 
 
 ## How to use / example ESPHome configuration
@@ -81,6 +81,8 @@ daly_bms:
 ```
 you can get failure status code: 
 change "template_sens" to your template sensor.
+
+More information can be found [here](https://esphome.io/components/sensor/template.html).
 
 ```daly_bms:
   - uart_id: uart1
