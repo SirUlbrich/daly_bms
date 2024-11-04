@@ -277,6 +277,19 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
 #endif
             break;
 #ifdef USE_SENSOR
+            //================================== TEMPERATURE = 0x96 ==================================
+          case DALY_REQUEST_TEMPERATURE:
+            if (it[4] == 1) {
+              if (this->temperature_1_sensor_) {
+                this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
+              }
+              if (this->temperature_2_sensor_) {
+                this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
+              }
+            }
+#endif
+            break;
+#ifdef USE_SENSOR
             //================================== CELL VOLTAGE 0x95 ==================================
           case DALY_REQUEST_CELL_VOLTAGE:
             switch (it[4]) {
@@ -343,17 +356,7 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             }
 #endif
             break;
-#ifdef USE_SENSOR
-            //================================== TEMPERATURE = 0x96 ==================================
-          case DALY_REQUEST_TEMPERATURE:
-            if (this->temperature_1_sensor_) {
-              this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
-            }
-            if (this->temperature_2_sensor_) {
-              this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
-            }
-#endif
-            break;
+
             // ================================== BALANCE = 0x97 ==================================
 #ifdef USE_BINARY_SENSOR
           case DALY_REQUEST_BALANCE:
