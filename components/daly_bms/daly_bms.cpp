@@ -336,15 +336,12 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             }
             //================================== TEMPERATURE = 0x96 ==================================
           case DALY_REQUEST_TEMPERATURE:
-              if (it[4] == 1) {
-                  if (this->temperature_1_sensor_) {
-                      this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
-                  }
-                  if (this->temperature_2_sensor_) {
-                      this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
-                  }
-
-              }
+            if (this->temperature_1_sensor_) {
+              this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
+            }
+            if (this->temperature_2_sensor_) {
+              this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
+            }
               break;
 #endif
             break;
