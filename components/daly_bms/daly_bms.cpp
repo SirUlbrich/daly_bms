@@ -188,9 +188,7 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             if (this->battery_level_sensor_) {
               this->battery_level_sensor_->publish_state((float) encode_uint16(it[10], it[11]) / 10);
             }
-#endif
             break;
-#ifdef USE_SENSOR
             //================================== MIN_MAX_VOLTAGE = 0x91 ==================================
           case DALY_REQUEST_MIN_MAX_VOLTAGE:
             if (this->max_cell_voltage_sensor_) {
@@ -208,10 +206,8 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             if (this->cell_voltage_difference_sensor_) {
               this->cell_voltage_difference_sensor_->publish_state(((float) (encode_uint16(it[4], it[5]) - encode_uint16(it[7], it[8])) / 1000));
             }
-#endif
             break;
             //================================== MIN_MAX_TEMPERATURE = 0x92 ==================================
-#ifdef USE_SENSOR
           case DALY_REQUEST_MIN_MAX_TEMPERATURE:
             if (this->max_temperature_sensor_) {
               this->max_temperature_sensor_->publish_state(it[4] - DALY_TEMPERATURE_OFFSET);
@@ -225,10 +221,9 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             if (this->min_temperature_probe_number_sensor_) {
               this->min_temperature_probe_number_sensor_->publish_state(it[7]);
             }
-#endif
             break;
+#endif
             // ================================== MOS = 0x93 ==================================
-
           case DALY_REQUEST_MOS:
 #ifdef USE_TEXT_SENSOR
             if (this->status_text_sensor_ != nullptr) {
@@ -247,7 +242,6 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
               }
             }
 #endif
-            break;
 #ifdef USE_BINARY_SENSOR
             if (this->charging_mos_enabled_binary_sensor_) {
               this->charging_mos_enabled_binary_sensor_->publish_state(it[5]);
@@ -256,7 +250,6 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
               this->discharging_mos_enabled_binary_sensor_->publish_state(it[6]);
             }
 #endif
-            break;
 #ifdef USE_SENSOR
             if (this->remaining_capacity_sensor_) {
               this->remaining_capacity_sensor_->publish_state((float) encode_uint32(it[8], it[9], it[10], it[11]) / 1000);
@@ -265,6 +258,7 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
               this->bms_watchdog_sensor_->publish_state(it[7]);
             }
 #endif
+            break;
             // ================================== STATUS = 0x94 ==================================
 #ifdef USE_SENSOR
           case DALY_REQUEST_STATUS:
@@ -274,10 +268,17 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
             if (this->cycle_sensor_) {
               this->cycle_sensor_->publish_state((int) encode_uint16(it[9], it[10]));
             }
-#endif
             break;
-
-#ifdef USE_SENSOR
+            //================================== TEMPERATURE = 0x96 ==================================
+          case DALY_REQUEST_TEMPERATURE:
+              
+            if (this->temperature_1_sensor_) {
+                this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
+            }
+            if (this->temperature_2_sensor_) {
+                this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
+            }
+            break;
             //================================== CELL VOLTAGE 0x95 ==================================
           case DALY_REQUEST_CELL_VOLTAGE:
             switch (it[4]) {
@@ -341,21 +342,12 @@ void DalyBmsComponent::decode_data_(std::vector<uint8_t> data) {
                   this->cell_16_voltage_sensor_->publish_state((float) encode_uint16(it[5], it[6]) / 1000);
                 }
                 break;
+              default:
+                break;
             }
-            //================================== TEMPERATURE = 0x96 ==================================
-          case DALY_REQUEST_TEMPERATURE:
-            if (it[4] == 1) {
-              if (this->temperature_1_sensor_) {
-                this->temperature_1_sensor_->publish_state(it[5] - DALY_TEMPERATURE_OFFSET);
-              }
-              if (this->temperature_2_sensor_) {
-                this->temperature_2_sensor_->publish_state(it[6] - DALY_TEMPERATURE_OFFSET);
-              }
-            }
-            break;
+
 #endif
             break;
-
             // ================================== BALANCE = 0x97 ==================================
 #ifdef USE_BINARY_SENSOR
           case DALY_REQUEST_BALANCE:
